@@ -18,8 +18,10 @@ DB_USER = 'postgres'
 DB_PASS = 'genotools'
 DB_NAME = 'snp_metrics'
 
+# initialize gcloud sql connector
 connector = Connector()
 
+# get connection
 def getconn():
     conn = connector.connect(
         INSTANCE_CONNECTION_NAME,
@@ -30,15 +32,18 @@ def getconn():
     )
     return conn
 
+# create and sqlalchemy engine
 pool = sqlalchemy.create_engine(
     "postgresql+pg8000://",
     creator=getconn,
 )
 
+# connect
 db_conn = pool.connect()
 
 # query and fetch snps table
 triple_join_count = db_conn.execute("select count(*) from samples").fetchall()
 print(triple_join_count)
 
+# close connection
 connector.close()
